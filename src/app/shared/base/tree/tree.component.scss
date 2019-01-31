@@ -1,0 +1,57 @@
+:host ::ng-deep.treeview-container {
+  //overflow-x: hidden;
+  //overflow-y: scroll;
+  //margin-right: -15px;
+  //background-color: red;
+}
+:host ::ng-deep.form-control {
+  border-radius: 4px;
+  box-shadow: none;
+  border-color: #d2d6de;
+  width: 100% !important;
+}
+:host ::ng-deep.row-filter {
+  margin-bottom: 1rem !important;
+}
+:host ::ng-deep.form-check-inline {
+  border-top: 1px solid #ddd;
+  padding: 10px;
+}
+:host ::ng-deep.form-check-label {
+  font-weight: normal;
+  font-size: 18px;
+}
+.row-item {
+  .fa-item {
+    margin-top: -0.7rem;
+  }
+}
+.label-item {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-size: 16px;
+  color: #333;
+  margin-left: 8px;
+  font-weight: normal;
+}
+.form-inline {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+ }
+:host ::ng-deep.treeview-container::-webkit-scrollbar {
+  width: 5px;
+}
+:host ::ng-deep.treeview-container::-webkit-scrollbar-track {
+  background-color:#fff;
+  -webkit-border-radius: 2em;
+  -moz-border-radius: 2em;
+  border-radius:2em;
+}
+:host ::ng-deep.treeview-container::-webkit-scrollbar-thumb {
+  background-color:rgba(221,75,57,0.7);
+  -webkit-border-radius: 2em;
+  -moz-border-radius: 2em;
+  border-radius:2em;
+}

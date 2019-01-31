@@ -1,0 +1,14 @@
+{
+  "/api": {
+    "target": "http://localhost:56570/",
+    "logLevel": "debug",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/Cache_File": {
+    "target": "http://localhost:56570/",
+    "logLevel": "debug",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

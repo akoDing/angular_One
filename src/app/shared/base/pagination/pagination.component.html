@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col-xs-12 col-12 page-pagitatiopn">
+    <div *ngIf="isShowtitle" class="col-sm-5">
+      <div class="dataTables_info p-1" id="example2_info" role="status" aria-live="polite">当前显示第{{currentPage}}页；显示总记录数{{totalPage}}页</div>
+    </div>
+    <div class="input-group input-group-sm" style="width:105px;float:right;">
+      <input type="number" min="1" max="{{totalPage}}" class="form-control" [(ngModel)]="pageNO">
+      <span class="input-group-btn">
+        <button type="button" class="btn btn-info btn-flat" (click)="setPage()">跳转</button>
+      </span>
+    </div>
+    <pagination [boundaryLinks]="true" [totalItems]="totalItems" [rotate]="rotate" [maxSize]="maxSize" [(ngModel)]="currentPage"
+    (pageChanged)="pageChanged($event)" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>
+  </div>
+</div>

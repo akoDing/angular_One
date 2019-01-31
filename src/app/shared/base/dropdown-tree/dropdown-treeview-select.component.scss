@@ -1,0 +1,23 @@
+label {
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+:host ::ng-deep .dropdown .dropdown-menu .dropdown-container{
+  min-width: 240px;
+}
+
+:host ::ng-deep .row-filter{
+  margin-left: 0;
+  margin-right: 0;
+}
+
+:host ::ng-deep .btn-outline-secondary{
+  background-color: #fff;
+  border: 1px solid #d2d6de;
+  border-radius: 0;
+}
+
+:host ::ng-deep .btn-outline-secondary:disabled{
+  background-color: #ddd;
+}

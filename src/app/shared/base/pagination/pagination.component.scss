@@ -1,0 +1,16 @@
+:host ::ng-deep .pagination{
+  margin: 0 5px 0 0;
+  float: right;
+}
+:host ::ng-deep .pagination .active a{
+  background: #3c8dbc;
+  border: 1px solid #3c8dbc;
+}
+.input-group input,
+.input-group button{
+  height: 33px;
+}
+.input-group button{
+  border: 1px solid #3c8dbc;
+  background: #3c8dbc;
+}

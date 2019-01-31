@@ -1,0 +1,9 @@
+﻿.tco {
+    table-layout: fixed;
+}
+
+    .tco tr td {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
