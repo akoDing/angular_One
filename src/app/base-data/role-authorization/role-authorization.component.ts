@@ -1,6 +1,15 @@
-import { Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { TreeviewItem } from 'ngx-treeview';
 import { TreeComponent } from '../../shared/base/tree/tree.component';
+import { RoleModel, RoleOutputModel, RoleInputModel } from 'src/app/shared/model/role.model';
+import { RightModel, RightOutputModel, RightInputModel } from 'src/app/shared/model/right.model';
+import { RoleRightModel, RoleRightOutputModel, RoleRightInputModel } from 'src/app/shared/model/roleRight.model';
+import { RoleService } from 'src/app/shared/services/role.service';
+import { RoleRightService } from 'src/app/shared/services/roleRight.service';
+import { ResultModel } from 'src/app/shared/model/result.model';
+import { ToastrService } from 'ngx-toastr';
+import { a } from '@angular/core/src/render3';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-role-authorization',
@@ -13,48 +22,137 @@ export class RoleAuthorizationComponent implements OnInit, AfterViewInit {
   private TreeComponent: TreeComponent;
   item: TreeviewItem[];
   rows: string[];
-  constructor() { }
-  ngAfterViewInit() {
-    
-  }
-  onsaveClk() {
-    console.log(this.TreeComponent.rows)
-  }
-  
-  ngOnInit() {
-    this.item = new Array();
-  	const itCategory = new TreeviewItem({
-    text: 'IT', value: 9, children: [
-       {
-           text: 'Programming', value: 91, children: [{
-               text: 'Frontend', value: 911, children: [
-                   { text: 'Angular 1', value: 9111 },
-                   { text: 'Angular 2', value: 9112 },
-                   { text: 'ReactJS', value: 9113 }
-               ]
-           }, {
-               text: 'Backend', value: 912, children: [
-                   { text: 'C#', value: 9121 },
-                   { text: 'Java', value: 9122 },
-                   { text: 'Python', value: 9123, checked: false }
-               ]
-           }]
-       },
-       {
-           text: 'Networking', value: 92, children: [
-               { text: 'Internet', value: 921 },
-               { text: 'Security', value: 922 }
-           ]
-       }
-      ]
-    })
+  selectedRoleID: string;
+  selectedRoleName: string;
 
-    const teenCategory = new TreeviewItem({
-            text: 'Teen', value: 2, children: [
-                { text: 'Adventure', value: 21 },
-                { text: 'Science', value: 22 }
-            ]
-        })
-  	this.item.push(itCategory, teenCategory);
+  roles: Array<RoleOutputModel>;
+  rights: Array<RightOutputModel>;
+  rolerightList: Array<RoleRightOutputModel>;
+  constructor(private roleService: RoleService, private roleRightService: RoleRightService,
+    private toastrService: ToastrService) {
+    this.roles = new Array<RoleOutputModel>();
+    this.rights = new Array<RightOutputModel>();
+    this.item = new Array();
   }
+
+  ngAfterViewInit() {
+  }
+
+  onsaveClk() {
+    const input = new Array<RoleRightInputModel>();
+    if(this.TreeComponent.rows.length==0){
+      const a = new RoleRightInputModel();
+     
+      a.roleID = this.selectedRoleID;
+      input.push(a);
+    }
+
+    for (let item of this.TreeComponent.rows) {
+      const a = new RoleRightInputModel();
+      a.rightID = item;
+      a.roleID = this.selectedRoleID;
+      input.push(a);
+    }
+    this.roleRightService.setRoleRight(input).subscribe((e: ResultModel<Array<RoleRightOutputModel>>) => {
+      if (e.isSuccess) {
+        this.toastrService.success("授权成功！", 'Success!', {
+          positionClass: 'toast-top-center',
+          timeOut: 3000, closeButton: true
+        });
+        this.rolerightList = e.data;
+      } else {
+        this.toastrService.error(e.errorMessage, 'Error!', {
+          positionClass: 'toast-top-center',
+          timeOut: 3000, closeButton: true
+        });
+      }
+    });
+
+  }
+
+  ngOnInit() {
+    this.getRoleList();
+
+  }
+
+  getRoleList() {
+    this.roleService.listRole(new RoleInputModel()).subscribe((e: ResultModel<Array<RoleOutputModel>>) => {
+      if (e.isSuccess) {
+        this.roles = e.data;
+        if (e.data.length > 0) {
+          this.onRoleClick(this.roles[0]);
+        }
+      } else {
+        this.toastrService.error(e.errorMessage, 'Error!', {
+          positionClass: 'toast-top-center',
+          timeOut: 3000, closeButton: true
+        });
+      }
+    });
+  }
+  getRightList(roleids: Array<string>) {
+
+    this.roleRightService.listRight(roleids).subscribe((e: ResultModel<Array<RightOutputModel>>) => {
+      if (e.isSuccess) {
+        this.rights = e.data;
+        console.log(this.rights);
+
+        this.getTree();
+      } else {
+        this.toastrService.error(e.errorMessage, 'Error!', {
+          positionClass: 'toast-top-center',
+          timeOut: 3000, closeButton: true
+        });
+      }
+    });
+
+  }
+  onRoleClick(item: RoleModel) {
+    //给权限树赋值
+    this.item = new Array();
+    this.selectedRoleID = item.roleID;
+    this.selectedRoleName = item.roleName;
+    const roleids = new Array<string>();
+    roleids.push(item.roleID);
+    this.getRightList(roleids);
+    //console.log(JSON.stringify(this.rights));
+  }
+  getTree() {
+    while (this.rights.length > 0) {
+      const right = this.rights.pop();
+
+      const currentModule = this.item.find((e) => e.value === right.moduleID);
+      if (currentModule) {
+        const currentMenu = currentModule.children.find((e) => e.value === right.menuID);
+        if (currentMenu) {
+          currentMenu.children.push(new TreeviewItem({
+            text: right.rightName, value: right.rightID, checked: right.isChecked
+          }));
+        } else {
+          currentModule.children.push(new TreeviewItem({
+            text: right.menuName, value: right.menuName, children: [
+              {
+                text: right.rightName, value: right.rightID, checked: right.isChecked
+              }
+            ]
+          }));
+        }
+      } else {
+        const treeitem = new TreeviewItem({
+          text: right.moduleName, value: right.moduleID, children: [
+            {
+              text: right.menuName, value: right.menuName, children: [
+                {
+                  text: right.rightName, value: right.rightID, checked: right.isChecked
+                }
+              ]
+            }
+          ]
+        });
+        this.item.push(treeitem);
+      }
+    }
+  }
+
 }
+

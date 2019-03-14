@@ -1,114 +1,126 @@
-<section class="content">
+<section class="content-header">
   <h1>系统角色管理</h1>
+</section>
+<section class="content">
   <div class="row">
-  <div class="col-lg-6">
-    <div class="box box-default">
-       <div class="box-body">
-       	 <div class="row">
-       	   <div class="col-lg-3">
-       	 	  <div class="form-group">
-                <input type="text" class="form-control radius" id="departdNo" placeholder="请输入角色名称">
+    <div class="col-lg-6">
+      <div class="box box-default">
+        <div class="box-body">
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="form-group">
+                <input type="text" class="form-control radius" [(ngModel)]="queryConditionForRole.roleName"
+                  placeholder="请输入角色名称">
               </div>
             </div>
             <div class="col-lg-4">
-       	 	  <div class="form-group">
-               <select class="form-control radius">
-                  <option value='' disabled selected style='display:none;'>是否pim角色精确查询</option>
-                  <option>是</option>
-                  <option>否</option>
+              <div class="form-group">
+                <select class="form-control radius" [(ngModel)]="queryConditionForRole.isPim">
+                  <option value='null' selected>是否pim角色</option>
+                  <option value="true">是</option>
+                  <option value="false">否</option>
                 </select>
               </div>
             </div>
           </div>
-       </div>    
-       <div class="box-footer">
-         <button type="submit" class="btn btn-default btn-px mr-2">查询</button>
-       </div>
+        </div>
+        <div class="box-footer">
+          <button type="submit" class="btn btn-default btn-px mr-2" (click)="onSelectRole()">查询</button>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="col-lg-6">
-    <div class="box box-default">
-       <div class="box-body">
-         <div class="row">
-           <div class="col-lg-3">
-            <div class="form-group">
-                <input type="text" class="form-control radius" id="departdNo" placeholder="请输入部门">
-              </div>
-            </div>
-            <div class="col-lg-3">
-            <div class="form-group">
-                <input type="text" class="form-control radius" id="departdNanme" placeholder="请输入姓名">
-              </div>
-            </div>
-            <div class="col-lg-3">
-            <div class="form-group">
-                <input type="text" class="form-control radius" id="departdNanme" placeholder="请输入职位">
-              </div>
-            </div>
-          </div>
-       </div>    
-       <div class="box-footer">
-         <button type="submit" class="btn btn-default btn-px mr-2">查询</button>
-         <button type="submit" class="btn btn-default btn-px mr-2">批量添加</button>
-         <button type="submit" class="btn btn-default btn-px mr-2">批量删除</button>
-       </div>
-    </div>
-  </div>
-</div>
-  <div class="row">
-  	<div class="col-xs-6">
-  	  <div class="box box-primary">
+    <div class="col-lg-6">
+      <div class="box box-default">
         <div class="box-body">
-          <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-        	 <div class="row">
-        	  <div class="col-sm-12">
-              <table class="table table-bordered table-hover table-striped">
-               <thead>
-                <tr>
-                  <th class="sorting">角色名称</th>
-                  <th class="sorting">是否pim角色</th>
-                  <th class="sorting">操作</th>
-                </tr>
-               </thead>
-               <tbody>  
-                 <tr class="odd">
-                   <td class="sorting_1"><a>员工</a></td>
-                   <td>是</td>
-                   <td>
-                    <button type="button" data-toggle="modal" data-target="#role-edit" class="btn btn-primary btn-xs mr-2">编辑</button>
-                    <button type="button" data-toggle="modal" data-target="#delete" class="btn btn-danger btn-xs mr-2">删除</button>
-                   </td>
-                 </tr>
-                </tbody>
-              </table>
+          <div class="row">
+            <div class="col-lg-3">
+              <div class="form-group">
+                <select class="form-control radius" [(ngModel)]="queryCondition.organizationID">
+                  <option value='undefined' selected>请选择部门</option>
+                  <option *ngFor='let item of organizationList' value='{{ item.organizationID }}'>
+                    {{ item.organizationName }}</option>
+                </select>
+              </div>
             </div>
-          </div>
+            <div class="col-lg-3">
+              <div class="form-group">
+                <input type="text" class="form-control radius" [(ngModel)]="queryCondition.userName"
+                  placeholder="请输入姓名">
+              </div>
+            </div>
+            <div class="col-lg-3">
+              <div class="form-group">
+                <select class="form-control radius" [(ngModel)]="queryCondition.positionID">
+                  <option value='undefined' selected>请选择职位</option>
+                  <option *ngFor='let item of positionList' value='{{ item.positionID }}'>{{ item.positionName }}
+                  </option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
-      </div>  
+        <div class="box-footer">
+          <button type="submit" class="btn btn-default btn-px mr-2" (click)="onListSelect()">查询</button>
+          <button type="submit" (click)="onSelectUserAll()" [disabled]="!roleID" data-toggle="modal"
+            data-target="#batchAdd" class="btn btn-default btn-px mr-2">批量添加</button>
+          <button type="submit" class="btn btn-default btn-px mr-2" (click)="onRemoveUserRoleList()">批量删除</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="box box-primary">
+        <div class="box-body">
+          <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+            <div class="row">
+              <div class="col-sm-12">
+                <table class="table table-bordered table-hover table-striped">
+                  <thead>
+                    <tr>
+                      <th class="sorting">角色名称</th>
+                      <th class="sorting">是否pim角色</th>
+                      <th class="sorting">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="odd" *ngFor="let item of roleLists">
+                      <td class="sorting_1" (click)="onSelectUser(item.roleID)"><a>{{ item.roleName }}</a></td>
+                      <td>{{ item.isPim ? '是' : '否' }}</td>
+                      <td>
+                        <button (click)="onEditRole(item.roleID)" type="button" data-toggle="modal"
+                          data-target="#role-edit" class="btn btn-primary btn-xs mr-2">编辑</button>
+                        <button (click)="onRemoveRole(item.roleID)" *ngIf="item.canDelete" type="button"
+                          data-toggle="modal" data-target="#delete" class="btn btn-danger btn-xs mr-2">删除</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="col-xs-6">
       <div class="box box-primary">
         <div class="box-body">
           <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
-           <div class="row">
-            <div class="col-sm-12">
-              <app-user-table 
-              [isShowDepart]="false"
-              [isShowPosition]="false"
-              [isShowRole]="false"
-              [isShowState]="false"
-              [isShowpasswordBtn]="false"
-              (editClk)="oneditClk()" 
-              >  
-              </app-user-table>
-              <app-pagination [totalPage]="10"  [currentPage]="1" [maxSize]="3"></app-pagination>
+            <div class="row">
+              <div class="col-sm-12">
+                <app-user-table [dataList]="standards" [isShowDepart]="false" [isShowPosition]="false"
+                  [isShowRole]="false" [isShowState]="false" [isShowpasswordBtn]="false" (editClk)="oneditClk($event)"
+                  (deleteClk)="onBundingdeleteClk($event)">
+                </app-user-table>
+                <app-pagination [totalPage]="standards.totalPages" [currentPage]="standards.pageNO"
+                  (pageChanges)="onPageChange($event)">
+                </app-pagination>
+              </div>
             </div>
           </div>
-          </div>
         </div>
-      </div>  
+      </div>
     </div>
   </div>
 
@@ -121,25 +133,157 @@
           <div class="box-body">
             <div class="form-group">
               <label for="roleName_edit">角色名称</label>
-              <input type="text" class="form-control radius" id="roleName_edit" placeholder="请输入部门编号">
+              <input [(ngModel)]="roleInputModel.roleName" type="text" class="form-control radius" id="roleName_edit"
+                placeholder="请输入角色名称">
             </div>
             <div class="form-group">
               <label for="search">是否pim角色</label>
-              <select class="form-control radius">
-                <option value='' disabled selected style='display:none;'>请选择</option>
-                <option>是</option>
-                <option>否</option>
+              <select class="form-control radius" [(ngModel)]="roleInputModel.isPim">
+                <option value='true'>是</option>
+                <option value='false'>否</option>
               </select>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">保存</button>
-          <button type="button" class="btn btn-primary">返回</button>
+          <button type="button" class="btn btn-default" (click)="onSaveRole()">保存</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">返回</button>
         </div>
       </div>
     </div>
   </div>
-    <!-- Modal delete-->
+
+  <!-- Modal edit-->
+  <div class="modal fade" id="user-edit">
+    <div class="modal-dialog mt-15">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="box-body">
+            <div class="form-group">
+              <label for="No_edit">工号</label>
+              <input type="text" disabled class="form-control radius" value="{{ userInputModel.userNO }}"
+                placeholder="请输入工号">
+            </div>
+            <div class="form-group">
+              <label for="Name_edit">姓名</label>
+              <input type="text" disabled class="form-control radius" value="{{ userInputModel.userName }}"
+                placeholder="请输入姓名">
+            </div>
+            <div class="form-group">
+              <label for="role_edit">角色</label>
+              <app-select2 [(ngModel)]="editRoles" [data]="roleList" (valueChange)="onRoleChange()"
+                [options]="{multiple: true, text: 'roleName', id: 'roleID', placeholder: '请选择角色'}">
+              </app-select2>
+            </div>
+            <div class="form-group" *ngFor="let extendModel of extendEditList">
+              <label for="extend_edit">{{ extendModel.extendName }}</label>
+              <app-select2 *ngIf="extendModel.extendSourceModels"
+                [(ngModel)]="userInputModel[extendModel.extendNo.toLowerCase()]" [data]="extendModel.extendSourceModels"
+                [options]="{multiple: true, text: 'name', id: 'id', placeholder: '请选择扩展字段对应值'}"
+                (valueChange)="onExtendChange(extendModel.extendNo.toLowerCase())">
+              </app-select2>
+              <input *ngIf="!extendModel.extendSourceModels"
+                [(ngModel)]="userInputModel[extendModel.extendNo.toLowerCase()]" type="text" class="form-control radius"
+                placeholder="请输入扩展字段对应值">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" (click)="onSaveUser()">保存</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">返回</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Batch addition-->
+  <div class="modal fade" id="batchAdd">
+    <div class="modal-dialog mt-20">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="col-lg-12">
+            <div class="box box-default">
+              <div class="box-body">
+                <div class="row">
+                  <div class="col-lg-3">
+                    <div class="form-group">
+                      <select class="form-control radius" [(ngModel)]="queryConditionByRoleEdit.organizationID">
+                        <option value='undefined' selected>请选择部门</option>
+                        <option *ngFor='let item of organizationList' value='{{ item.organizationID }}'>
+                          {{ item.organizationName }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-lg-3">
+                    <div class="form-group">
+                      <input type="text" class="form-control radius" [(ngModel)]="queryConditionByRoleEdit.userName"
+                        placeholder="请输入姓名">
+                    </div>
+                  </div>
+                  <div class="col-lg-3">
+                    <div class="form-group">
+                      <select class="form-control radius" [(ngModel)]="queryConditionByRoleEdit.positionID">
+                        <option value='undefined' selected>请选择职位</option>
+                        <option *ngFor='let item of positionList' value='{{ item.positionID }}'>{{ item.positionName }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="box-footer">
+                <button type="submit" class="btn btn-default btn-px mr-2" (click)="onListSelectEditExtend()">查询</button>
+              </div>
+            </div>
+          </div>
+          <div class="box-body">
+            <table class="table table-bordered table-hover table-striped">
+              <thead>
+                <tr>
+                  <th class="W-20"></th>
+                  <th class="sorting">工号</th>
+                  <th class="sorting">姓名</th>
+                  <th class="sorting" *ngFor="let item of extendEditLists">{{ item.extendName }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of standardsByRoleEdit">
+                  <td class="W-20 vertAlign">
+                    <label>
+                      <input type="checkbox" [(ngModel)]="user.isChecked" id="{{ user.userID }}"
+                        name="select-user-edit">
+                    </label>
+                  </td>
+                  <td class="vertAlign">{{ user.userNO }}</td>
+                  <td class="vertAlign">{{ user.userName }}</td>
+                  <td *ngFor="let extendModel of extendEditLists">
+
+                    <app-select2 *ngIf="extendModel.extendSourceModels" [disabled]="!user.isChecked"
+                      [(ngModel)]="user[extendModel.extendNo.toLowerCase()]" [data]="extendModel.extendSourceModels"
+                      [options]="{multiple: true, text: 'name', id: 'id', placeholder: '请选择' + extendModel.extendName }"
+                      (valueChange)="onExtendListChange(extendModel.extendNo.toLowerCase(), user)">
+                    </app-select2>
+                    <input *ngIf="!extendModel.extendSourceModels" [disabled]="!user.isChecked"
+                      [(ngModel)]="user[extendModel.extendNo.toLowerCase()]" type="text" class="form-control radius"
+                      placeholder="{{'请输入' + extendModel.extendName}}">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <app-pagination [totalPage]="standardsAllToRole.totalPages" [currentPage]="standardsAllToRole.pageNO"
+            (pageChanges)="onPageChangeByEdit($event)">
+          </app-pagination>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" (click)="onSaveExtend()">保存</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">返回</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal delete-->
   <app-delete-confirm (deleteClk)="ondeleteClk()"></app-delete-confirm>
 </section>

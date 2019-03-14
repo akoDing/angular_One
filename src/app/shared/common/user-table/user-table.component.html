@@ -11,42 +11,24 @@
       <th *ngIf="isShowOperation" class="sorting">操作</th>
     </tr>
   </thead>
-  <tbody>  
-	<tr>
-	  <td *ngIf="isShowCheck" class="W-20">
-        <label>
-          <input type="checkbox">
-        </label>
-      </td>
-	  <td *ngIf="isShowNumber">1</td>
-	  <td *ngIf="isShowName">张三</td>
-	  <td *ngIf="isShowDepart">财务部</td>
-	  <td *ngIf="isShowPosition">一般员工</td>
-	  <td *ngIf="isShowRole">员工；会计</td>
-	  <td *ngIf="isShowState">在职</td>
-	  <td *ngIf="isShowOperation">
-		<button type="button" data-toggle="modal" data-target="#roleList-edit" (click)="editClked()" class="btn btn-primary btn-xs mr-2">编辑</button>
-	    <button type="button" data-toggle="modal" data-target="#delete" class="btn btn-danger btn-xs mr-2">删除</button>
-		<button *ngIf="isShowpasswordBtn" type="button" (click)="passwordRClked()" class="btn btn-info btn-xs mr-2">密码重置</button>
-	  </td>
-    </tr>
-    <tr>
+  <tbody>
+    <tr *ngFor="let item of dataList.listData">
       <td *ngIf="isShowCheck" class="W-20">
         <label>
-          <input type="checkbox">
+          <input type="checkbox" name="select-user" value="{{ item.userID }}">
         </label>
       </td>
-	  <td *ngIf="isShowNumber">2</td>
-	  <td *ngIf="isShowName">李四</td>
-	  <td *ngIf="isShowDepart">技术部</td>
-	  <td *ngIf="isShowPosition">中层干部</td>
-	  <td *ngIf="isShowRole">分管校领导</td>
-	  <td *ngIf="isShowState">离职</td>
-	  <td *ngIf="isShowOperation">
-		<button type="button" class="btn btn-primary btn-xs mr-2">编辑</button>
-	    <button type="button" class="btn btn-danger btn-xs mr-2">删除</button>
-		<button *ngIf="isShowpasswordBtn" type="button" class="btn btn-info btn-xs mr-2">密码重置</button>
-	  </td>
-	</tr>
+      <td *ngIf="isShowNumber">{{ item.userNO }}</td>
+      <td *ngIf="isShowName">{{ item.userName }}</td>
+      <td *ngIf="isShowDepart">{{ item.organizationName }}</td>
+      <td *ngIf="isShowPosition">{{ item.positionName }}</td>
+      <td *ngIf="isShowRole"><span *ngFor="let role of item.userRoleModel">{{ role.roleName }}&nbsp;&nbsp;</span></td>
+      <td *ngIf="isShowState">{{ item.userType }}</td>
+      <td *ngIf="isShowOperation">
+        <button type="button" data-toggle="modal" data-target="#user-edit" (click)="editClked(item.userID)" class="btn btn-primary btn-xs mr-2">编辑</button>
+        <button *ngIf="!item.isSynchronization" type="button" data-toggle="modal" data-target="#delete" (click)="onBundingDeleteID(item)" class="btn btn-danger btn-xs mr-2">删除</button>
+        <button *ngIf="!item.isSynchronization && isShowpasswordBtn" type="button" (click)="passwordRClked(item.userID)" class="btn btn-info btn-xs mr-2">密码重置</button>
+      </td>
+    </tr>
   </tbody>
 </table>

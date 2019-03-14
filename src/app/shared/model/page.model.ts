@@ -1,4 +1,4 @@
-import { BasePageModel } from "./base-page.model";
+import { BasePageModel } from './base-page.model';
 
 export class PageModel<T> extends BasePageModel {
   public listData: Array<T>;

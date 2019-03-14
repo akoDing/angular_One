@@ -14,7 +14,7 @@ import { ServerTimeoutException } from '../exception/server-timeout.exception';
 import { UnhandledException } from '../exception/unhandled.exception';
 import { contentHeaders } from './headers';
 
-const servicePath = '/api/';
+const servicePath = '/WebApi/';
 
 
 @Injectable()
@@ -134,15 +134,15 @@ export class ServiceBase {
         // let errMsg = (error.message) ? error.message :
         //    error.status ? `${error.status} - ${error.statusText}` : 'Server error';
         // console.error('error=' + JSON.stringify(error)); // log to console instead
-        $("#loading").hide();
+        $('#loading').hide();
         const body = JSON.parse(error._body) as any;
-        if (body.errorCode == 1) {
+        if (body.errorCode === 1) {
             if (this.router.url.includes('/order')) {
                 window.location.href = 'to do';
             } else {
-                this.router.navigateByUrl('login4portal');//to do
+                this.router.navigateByUrl('login4portal'); // to do
             }
-        } else if (body.errorCode == 2) {
+        } else if (body.errorCode === 2) {
             this.router.navigateByUrl('nopermission');
         }
         return Observable.throw(error).toPromise();

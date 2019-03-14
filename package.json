@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "build": "ng build --prod --aot --build-optimizer",
+    "build:deploy": "ng build --prod --aot --build-optimizer --base-href /WebSite/ --output-path E:/IIS/GuangXiFinanceCloud/WebSite/",
     "start:dev": "ng serve --proxy-config proxy.conf.json --open",
     "start:aot": "ng serve --prod --aot --proxy-config proxy.conf.json --open",
     "test": "ng test",

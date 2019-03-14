@@ -59,7 +59,7 @@ export class TreeComponent implements OnInit, OnChanges {
         parent = parent.parent;
       }
       const reverseTexts = reverse(texts);
-      const row = `${reverseTexts.join(' -> ')} : ${value}`;
+      const row = `${value}`;
       this.rows.push(row);
     });
       // console.log(this.rows)
